@@ -2,7 +2,7 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "sh -c 'mkdir -p /app/data && chmod -R 755 /app/data && npm run db:migrate && npm run start & node cron.js & wait'"
+startCommand = "sh -c 'npm run db:migrate && npm run start & node cron.js & wait'"
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 10
 

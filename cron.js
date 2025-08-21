@@ -43,6 +43,7 @@ const getAppSettings = async () => {
          await promises.writeFile(`${dataPath}/settings.json`, JSON.stringify(defaultSettings), { encoding: 'utf-8' });
       } catch (writeError) {
          console.log('ERROR: Cannot write to data directory. Using fallback settings.', writeError.message);
+         console.log('This is likely due to volume mount permissions. The app will use default settings.');
       }
       return defaultSettings;
    }
