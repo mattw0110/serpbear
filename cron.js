@@ -18,9 +18,10 @@ const getAppSettings = async () => {
    // console.log('process.env.SECRET: ', process.env.SECRET);
    try {
       let decryptedSettings = {};
-      const exists = await promises.stat(`${process.cwd()}/data/settings.json`).then(() => true).catch(() => false);
+      const dataPath = process.env.NODE_ENV === 'production' ? '/app/data' : `${process.cwd()}/data`;
+      const exists = await promises.stat(`${dataPath}/settings.json`).then(() => true).catch(() => false);
       if (exists) {
-         const settingsRaw = await promises.readFile(`${process.cwd()}/data/settings.json`, { encoding: 'utf-8' });
+         const settingsRaw = await promises.readFile(`${dataPath}/settings.json`, { encoding: 'utf-8' });
          const settings = settingsRaw ? JSON.parse(settingsRaw) : {};
 
          try {
@@ -37,7 +38,8 @@ const getAppSettings = async () => {
       return decryptedSettings;
    } catch (error) {
       // console.log('CRON ERROR: Reading Settings File. ', error);
-      await promises.writeFile(`${process.cwd()}/data/settings.json`, JSON.stringify(defaultSettings), { encoding: 'utf-8' });
+      const dataPath = process.env.NODE_ENV === 'production' ? '/app/data' : `${process.cwd()}/data`;
+      await promises.writeFile(`${dataPath}/settings.json`, JSON.stringify(defaultSettings), { encoding: 'utf-8' });
       return defaultSettings;
    }
 };
@@ -110,7 +112,8 @@ const runAppCronJobs = () => {
    new Cron(failedCronTime, () => {
       // console.log('### Retrying Failed Scrapes...');
 
-      readFile(`${process.cwd()}/data/failed_queue.json`, { encoding: 'utf-8' }, (err, data) => {
+      const dataPath = process.env.NODE_ENV === 'production' ? '/app/data' : `${process.cwd()}/data`;
+      readFile(`${dataPath}/failed_queue.json`, { encoding: 'utf-8' }, (err, data) => {
          if (data) {
             try {
                const keywordsToRetry = data ? JSON.parse(data) : [];
