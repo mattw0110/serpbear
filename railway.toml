@@ -2,7 +2,7 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "sh -c 'npm run db:migrate && npm run start & node cron.js & wait'"
+startCommand = "sh -c 'chown -R $(whoami) /app/data 2>/dev/null || true && chmod -R 755 /app/data 2>/dev/null || true && npm run db:migrate && npm run start & node cron.js & wait'"
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 10
 
