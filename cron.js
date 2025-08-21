@@ -39,7 +39,11 @@ const getAppSettings = async () => {
    } catch (error) {
       // console.log('CRON ERROR: Reading Settings File. ', error);
       const dataPath = process.env.NODE_ENV === 'production' ? '/app/data' : `${process.cwd()}/data`;
-      await promises.writeFile(`${dataPath}/settings.json`, JSON.stringify(defaultSettings), { encoding: 'utf-8' });
+      try {
+         await promises.writeFile(`${dataPath}/settings.json`, JSON.stringify(defaultSettings), { encoding: 'utf-8' });
+      } catch (writeError) {
+         console.log('ERROR: Cannot write to data directory. Using fallback settings.', writeError.message);
+      }
       return defaultSettings;
    }
 };

@@ -8,7 +8,7 @@
     "start": "next start",
     "cron": "node cron.js",
     "start:all": "concurrently npm:start npm:cron",
-    "postinstall": "mkdir -p data && mkdir -p /app/data",
+    "postinstall": "mkdir -p data && mkdir -p /app/data && chmod -R 755 /app/data 2>/dev/null || true",
     "lint": "next lint",
     "lint:css": "stylelint styles/*.css",
     "test": "jest --watch --verbose",

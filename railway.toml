@@ -2,7 +2,7 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "sh -c 'npm run start & node cron.js & wait'"
+startCommand = "sh -c 'chmod -R 755 /app/data 2>/dev/null || true && npm run start & node cron.js & wait'"
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 10
 
