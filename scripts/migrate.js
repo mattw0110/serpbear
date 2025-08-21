@@ -3,14 +3,23 @@ const path = require('path');
 const fs = require('fs');
 
 async function runMigrations() {
-  const dbPath = process.env.DATABASE_PATH || '/app/data/database.sqlite';
+  // Use Railway's volume mount path if available, otherwise fallback
+  const volumePath = process.env.RAILWAY_VOLUME_MOUNT_PATH;
+  const dbPath = volumePath 
+    ? `${volumePath}/database.sqlite`
+    : process.env.DATABASE_PATH || './data/database.sqlite';
   const dataDir = path.dirname(dbPath);
   
-  // The data directory should already exist from Railway volume mount
   console.log(`Using data directory: ${dataDir}`);
+  console.log(`Railway volume mount path: ${volumePath || 'not set'}`);
   
-  // Test if we can write to the directory
+  // Ensure data directory exists
   try {
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
+    
+    // Test if we can write to the directory
     const testFile = path.join(dataDir, '.write-test');
     fs.writeFileSync(testFile, 'test');
     fs.unlinkSync(testFile);

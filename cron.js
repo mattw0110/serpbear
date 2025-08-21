@@ -19,8 +19,11 @@ const getAppSettings = async () => {
    // console.log('process.env.SECRET: ', process.env.SECRET);
    try {
       let decryptedSettings = {};
-      // Use DATABASE_PATH to determine data directory
-      const dbPath = process.env.DATABASE_PATH || '/app/data/database.sqlite';
+      // Use Railway's volume mount path if available, otherwise fallback
+      const volumePath = process.env.RAILWAY_VOLUME_MOUNT_PATH;
+      const dbPath = volumePath 
+        ? `${volumePath}/database.sqlite`
+        : process.env.DATABASE_PATH || './data/database.sqlite';
       const dataPath = path.dirname(dbPath);
       const exists = await promises.stat(`${dataPath}/settings.json`).then(() => true).catch(() => false);
       if (exists) {
@@ -41,9 +44,16 @@ const getAppSettings = async () => {
       return decryptedSettings;
    } catch (error) {
       // console.log('CRON ERROR: Reading Settings File. ', error);
-      const dbPath = process.env.DATABASE_PATH || '/app/data/database.sqlite';
+      const volumePath = process.env.RAILWAY_VOLUME_MOUNT_PATH;
+      const dbPath = volumePath 
+        ? `${volumePath}/database.sqlite`
+        : process.env.DATABASE_PATH || './data/database.sqlite';
       const dataPath = path.dirname(dbPath);
       try {
+         // Ensure directory exists
+         if (!require('fs').existsSync(dataPath)) {
+            require('fs').mkdirSync(dataPath, { recursive: true });
+         }
          await promises.writeFile(`${dataPath}/settings.json`, JSON.stringify(defaultSettings), { encoding: 'utf-8' });
       } catch (writeError) {
          console.log('ERROR: Cannot write to data directory. Using fallback settings.', writeError.message);
@@ -120,7 +130,10 @@ const runAppCronJobs = () => {
    new Cron(failedCronTime, () => {
       // console.log('### Retrying Failed Scrapes...');
 
-      const dbPath = process.env.DATABASE_PATH || '/app/data/database.sqlite';
+      const volumePath = process.env.RAILWAY_VOLUME_MOUNT_PATH;
+      const dbPath = volumePath 
+        ? `${volumePath}/database.sqlite`
+        : process.env.DATABASE_PATH || './data/database.sqlite';
       const dataPath = path.dirname(dbPath);
       readFile(`${dataPath}/failed_queue.json`, { encoding: 'utf-8' }, (err, data) => {
          if (data) {
