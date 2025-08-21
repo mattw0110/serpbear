@@ -6,14 +6,21 @@ async function runMigrations() {
   const dbPath = process.env.DATABASE_PATH || './data/database.sqlite';
   const dataDir = path.dirname(dbPath);
   
-  // Ensure data directory exists
+  // Ensure data directory exists and is writable
   try {
     if (!fs.existsSync(dataDir)) {
       fs.mkdirSync(dataDir, { recursive: true });
     }
+    // Test write permissions
+    const testFile = path.join(dataDir, '.write-test');
+    fs.writeFileSync(testFile, 'test');
+    fs.unlinkSync(testFile);
+    console.log(`Data directory ${dataDir} is writable.`);
   } catch (error) {
-    console.log('Warning: Could not create data directory:', error.message);
-    console.log('Continuing with existing directory...');
+    console.log('Warning: Data directory is not writable:', error.message);
+    console.log('Falling back to local data directory...');
+    // Fallback to local directory if volume mount fails
+    process.env.DATABASE_PATH = './data/database.sqlite';
   }
   
   const sequelize = new Sequelize({
