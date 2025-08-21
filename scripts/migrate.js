@@ -3,18 +3,21 @@ const path = require('path');
 const fs = require('fs');
 
 async function runMigrations() {
-  const dbPath = process.env.DATABASE_PATH || '/tmp/data/database.sqlite';
+  const dbPath = process.env.DATABASE_PATH || '/app/data/database.sqlite';
   const dataDir = path.dirname(dbPath);
   
-  // Ensure data directory exists
+  // The data directory should already exist from Railway volume mount
+  console.log(`Using data directory: ${dataDir}`);
+  
+  // Test if we can write to the directory
   try {
-    if (!fs.existsSync(dataDir)) {
-      fs.mkdirSync(dataDir, { recursive: true });
-      console.log(`Created data directory: ${dataDir}`);
-    }
-    console.log(`Using data directory: ${dataDir}`);
+    const testFile = path.join(dataDir, '.write-test');
+    fs.writeFileSync(testFile, 'test');
+    fs.unlinkSync(testFile);
+    console.log('Data directory is writable');
   } catch (error) {
-    console.error('Error creating data directory:', error.message);
+    console.error('Data directory is not writable:', error.message);
+    console.error('Check Railway volume mount permissions');
     process.exit(1);
   }
   

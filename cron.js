@@ -20,7 +20,7 @@ const getAppSettings = async () => {
    try {
       let decryptedSettings = {};
       // Use DATABASE_PATH to determine data directory
-      const dbPath = process.env.DATABASE_PATH || '/tmp/data/database.sqlite';
+      const dbPath = process.env.DATABASE_PATH || '/app/data/database.sqlite';
       const dataPath = path.dirname(dbPath);
       const exists = await promises.stat(`${dataPath}/settings.json`).then(() => true).catch(() => false);
       if (exists) {
@@ -41,13 +41,9 @@ const getAppSettings = async () => {
       return decryptedSettings;
    } catch (error) {
       // console.log('CRON ERROR: Reading Settings File. ', error);
-      const dbPath = process.env.DATABASE_PATH || '/tmp/data/database.sqlite';
+      const dbPath = process.env.DATABASE_PATH || '/app/data/database.sqlite';
       const dataPath = path.dirname(dbPath);
       try {
-         // Ensure directory exists before writing
-         if (!require('fs').existsSync(dataPath)) {
-            require('fs').mkdirSync(dataPath, { recursive: true });
-         }
          await promises.writeFile(`${dataPath}/settings.json`, JSON.stringify(defaultSettings), { encoding: 'utf-8' });
       } catch (writeError) {
          console.log('ERROR: Cannot write to data directory. Using fallback settings.', writeError.message);
@@ -124,7 +120,7 @@ const runAppCronJobs = () => {
    new Cron(failedCronTime, () => {
       // console.log('### Retrying Failed Scrapes...');
 
-      const dbPath = process.env.DATABASE_PATH || '/tmp/data/database.sqlite';
+      const dbPath = process.env.DATABASE_PATH || '/app/data/database.sqlite';
       const dataPath = path.dirname(dbPath);
       readFile(`${dataPath}/failed_queue.json`, { encoding: 'utf-8' }, (err, data) => {
          if (data) {

@@ -5,5 +5,5 @@ module.exports = {
   'models-path': path.resolve('database', 'models'),
   'seeders-path': path.resolve('database', 'seeders'),
   'migrations-path': path.resolve('database', 'migrations'),
-  'url': process.env.DATABASE_PATH || './data/database.sqlite'
+  'url': process.env.DATABASE_PATH || '/app/data/database.sqlite'
 };

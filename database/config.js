@@ -6,7 +6,7 @@ module.exports = {
     host: 'database',
     port: 3306,
     dialect: 'sqlite',
-    storage: process.env.DATABASE_PATH || '/tmp/data/database.sqlite',
+    storage: process.env.DATABASE_PATH || '/app/data/database.sqlite',
     dialectOptions: {
       bigNumberStrings: true,
     },
