@@ -2,7 +2,7 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "sh -c 'chown -R $(whoami) /app/data 2>/dev/null || true && chmod -R 755 /app/data 2>/dev/null || true && node scripts/migrate.js && npm run start & node cron.js & wait'"
+startCommand = "sh -c 'chown -R $(whoami) /app/data 2>/dev/null || true && chmod -R 755 /app/data 2>/dev/null || true && npx sequelize-cli db:migrate --env production && npm run start & node cron.js & wait'"
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 10
 
