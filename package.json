@@ -9,6 +9,7 @@
     "cron": "node cron.js",
     "start:all": "concurrently npm:start npm:cron",
     "postinstall": "mkdir -p data 2>/dev/null || true",
+    "db:migrate": "node scripts/migrate.js",
     "lint": "next lint",
     "lint:css": "stylelint styles/*.css",
     "test": "jest --watch --verbose",

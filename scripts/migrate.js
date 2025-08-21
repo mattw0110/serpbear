@@ -7,8 +7,13 @@ async function runMigrations() {
   const dataDir = path.dirname(dbPath);
   
   // Ensure data directory exists
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
+  try {
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
+  } catch (error) {
+    console.log('Warning: Could not create data directory:', error.message);
+    console.log('Continuing with existing directory...');
   }
   
   const sequelize = new Sequelize({
