@@ -2,7 +2,7 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "npm run start:all"
+startCommand = "sh -c 'npm run start:all'"
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 10
 
