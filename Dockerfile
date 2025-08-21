@@ -26,7 +26,6 @@ RUN npm install -g npm@"${NPM_VERSION}"
 ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
-RUN set -xe && mkdir -p /app/data && chown nextjs:nodejs /app/data
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 # COPY --from=builder --chown=nextjs:nodejs /app/data ./data
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
@@ -43,7 +42,8 @@ RUN npm init -y
 RUN npm i cryptr@6.0.3 dotenv@16.0.3 croner@9.0.0 @googleapis/searchconsole@1.0.5 sequelize-cli@6.6.2 @isaacs/ttlcache@1.4.1
 RUN npm i -g concurrently
 
-USER nextjs
+# Don't switch to nextjs user - Railway volumes need root permissions
+# USER nextjs
 
 EXPOSE 3000
 
