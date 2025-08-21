@@ -14,7 +14,7 @@
     "test": "jest --watch --verbose",
     "test:ci": "jest --ci",
     "test:cv": "jest --coverage --coverageDirectory='coverage'",
-    "db:migrate": "npx sequelize-cli db:migrate --env production",
+    "db:migrate": "node scripts/migrate.js",
     "db:revert": "npx sequelize-cli db:migrate:undo --env production",
     "release": "standard-version"
   },
