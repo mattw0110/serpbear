@@ -10,5 +10,6 @@ module.exports = {
     dialectOptions: {
       bigNumberStrings: true,
     },
+    logging: false,
   },
 };
