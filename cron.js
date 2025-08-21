@@ -7,7 +7,7 @@ require('dotenv').config({ path: './.env.local' });
 
 const getAppSettings = async () => {
    const defaultSettings = {
-      scraper_type: 'none',
+      scraper_type: 'scrapingbee',
       notification_interval: 'never',
       notification_email: '',
       smtp_server: '',
