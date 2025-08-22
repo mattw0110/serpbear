@@ -2,7 +2,6 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "sh entrypoint.sh && concurrently \"npm run start\" \"node cron.js\""
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 10
 
