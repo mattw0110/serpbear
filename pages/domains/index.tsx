@@ -88,7 +88,7 @@ const Domains: NextPage = () => {
                </div>
          )}
          <Head>
-            <title>Domains - SerpBear</title>
+            <title>Domains - Patientize</title>
          </Head>
          <TopBar showSettings={() => setShowSettings(true)} showAddModal={() => setShowAddDomain(true)} />
 
